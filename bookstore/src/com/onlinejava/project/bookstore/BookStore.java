@@ -15,6 +15,7 @@ public class BookStore {
         System.out.println("            ---------------------------------                  ");
         System.out.println("           |                                 |                 ");
         System.out.println("           |       1. Print book list        |                 ");
+        System.out.println("           |       2. add book               |                 ");
         System.out.println("           |       0. Quit                   |                 ");
         System.out.println("           |                                 |                 ");
         System.out.println("            ---------------------------------                  ");
@@ -28,7 +29,10 @@ public class BookStore {
         String command = scanner.nextLine().trim();
         switch (command) {
             case "1":
-                list.forEach(i -> System.out.println(i));
+                getAllBook();
+                break;
+            case "2":
+                addBook();
                 break;
             case "0":
                 System.exit(0);
@@ -39,8 +43,35 @@ public class BookStore {
 
     } // runCommand
 
-    public void addList(Book book){
+
+    // 모든 책 조회
+    public void getAllBook(){
+        System.out.println(
+                String.format("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION")
+        );
+        list.forEach(i -> System.out.println(i));
+    }
+
+    // 책 추가
+    public void addBook(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("title > ");
+        String title = scanner.nextLine().trim();
+        System.out.println("writer > ");
+        String writer = scanner.nextLine().trim();
+        System.out.println("publisher > ");
+        String publisher = scanner.nextLine().trim();
+        System.out.println("price > ");
+        int price = Integer.parseInt(scanner.nextLine().trim());
+        System.out.println("releaseDate > ");
+        String releaseDate = scanner.nextLine().trim();
+        System.out.println("location > ");
+        String location = scanner.nextLine().trim();
+
+
+        Book book = new Book(title, writer, publisher, price, releaseDate, location);
         list.add(book);
+
     } // addList
 
 } // end class

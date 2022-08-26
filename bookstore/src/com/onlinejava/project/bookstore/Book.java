@@ -6,11 +6,11 @@ public class Book {
     private String title;
     private String writer;
     private String publisher;
-    private String price;
+    private int price;
     private String releaseDate;
     private String location;
 
-    public Book(String title, String writer, String publisher, String price, String releaseDate, String location) {
+    public Book(String title, String writer, String publisher, int price, String releaseDate, String location) {
         this.title = title;
         this.writer = writer;
         this.publisher = publisher;
@@ -31,7 +31,7 @@ public class Book {
         return publisher;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 
@@ -55,7 +55,7 @@ public class Book {
         this.publisher = publisher;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
@@ -66,17 +66,10 @@ public class Book {
     public void setLocation(String location) {
         this.location = location;
     }
-
     @Override
     public String toString() {
-        return "Book{" +
-                "title='" + title + '\'' +
-                ", writer='" + writer + '\'' +
-                ", publisher='" + publisher + '\'' +
-                ", price='" + price + '\'' +
-                ", releaseDate='" + releaseDate + '\'' +
-                ", location='" + location + '\'' +
-                '}';
+        return String.format("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |", title, writer, publisher, price, releaseDate, location);
     }
+
 
 } // end class
