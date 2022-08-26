@@ -3,16 +3,13 @@ package com.onlinejava.project.bookstore;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.onlinejava.project.bookstore.Book.Properties.*;
 
 public class BookStore {
 
     private List<Book> list = new ArrayList<>();
-
-    private static boolean test(Book i) {
-        return false;
-    }
 
     public void printWelcomePage() {
         System.out.println("===============================================================");
@@ -46,7 +43,7 @@ public class BookStore {
             case "3":
                 System.out.println("Please select category number to search");
 
-                List.of(TITTLE, WRITER, PUBLISHER, PRICE, RELEASEDATE, LOCATION).stream()
+                Stream.of(TITTLE, WRITER, PUBLISHER, PRICE, RELEASEDATE, LOCATION)
                         .map(Book.Properties::toCategoryString)
                         .forEach(System.out::println);
                 int categoryNum = Integer.parseInt(scanner.nextLine().trim());
