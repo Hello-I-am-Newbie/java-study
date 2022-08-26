@@ -31,7 +31,7 @@ public class Book {
         return publisher;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
