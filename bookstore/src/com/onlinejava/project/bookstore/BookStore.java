@@ -1,6 +1,7 @@
 package com.onlinejava.project.bookstore;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -116,43 +117,32 @@ public class BookStore {
     }
 
     public List<Book> searchBook(String category,String keyword){
-
-        List<Book> bookList = new ArrayList<>();
-
-
         switch (category){
             case "title":
-                bookList = this.list.stream().filter((book)->book.getTitle().contains(keyword)).collect(Collectors.toUnmodifiableList());
-                return bookList;
+                return this.list.stream().filter((book)->book.getTitle().contains(keyword)).collect(Collectors.toUnmodifiableList());
             case "writer":
-                bookList =this.list.stream().filter((book)->book.getWriter().contains(keyword)).collect(Collectors.toUnmodifiableList());
-                return bookList;
+                return this.list.stream().filter((book)->book.getWriter().contains(keyword)).collect(Collectors.toUnmodifiableList());
             case "publisher":
-                bookList = this.list.stream().filter((book)->book.getPublisher().contains(keyword)).collect(Collectors.toUnmodifiableList());
-            return bookList;
+                return this.list.stream().filter((book)->book.getPublisher().contains(keyword)).collect(Collectors.toUnmodifiableList());
             case "price":
-                bookList = this.list.stream().filter((book)->book.getPrice().equals(Integer.parseInt(keyword))).collect(Collectors.toUnmodifiableList());
-            return bookList;
+                return this.list.stream().filter((book)->book.getPrice().equals(Integer.parseInt(keyword))).collect(Collectors.toUnmodifiableList());
             case "releaseDate":
-                bookList = this.list.stream().filter((book)->book.getReleaseDate().contains(keyword)).collect(Collectors.toUnmodifiableList());
-            return bookList;
+                return this.list.stream().filter((book)->book.getReleaseDate().contains(keyword)).collect(Collectors.toUnmodifiableList());
             case "location":
-                bookList = this.list.stream().filter((book)->book.getLocation().contains(keyword)).collect(Collectors.toUnmodifiableList());
-                return bookList;
+                return this.list.stream().filter((book)->book.getLocation().contains(keyword)).collect(Collectors.toUnmodifiableList());
+            default:
+                return Collections.emptyList();
         }
-
-        return bookList;
     }
 
     private void removeBook(String title, Scanner scanner){
-        List<Book> bookLit = list.stream()
-                .filter((book) -> book.getTitle()
-                        .equals(title))
-                .collect(Collectors.toUnmodifiableList());
 
         System.out.println("List of deleted Books");
         System.out.printf("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |\n", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION");
-        bookLit.forEach(System.out::println);
+        list.stream()
+            .filter(book -> book.getTitle().equals(title))
+            .collect(Collectors.toUnmodifiableList())
+            .forEach(System.out::println);
 
         System.out.println("Do you really want to delete?   Y\\N");
 
