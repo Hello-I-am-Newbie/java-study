@@ -146,13 +146,11 @@ public class BookStore {
                 return tempList;
         }
 
-        String.format("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION");
         return tempList;
     }
 
     private void removeBook(String title,Scanner scanner){
-        List<Book> tempList = new ArrayList<>();
-        tempList = list.stream()
+        List<Book> tempList = list.stream()
                         .filter((book)->book.getTitle()
                         .equals(title))
                         .collect(Collectors.toUnmodifiableList());
@@ -163,14 +161,14 @@ public class BookStore {
 
         System.out.println("Do you really want to delete?   Y\\N");
 
-        String answer = scanner.nextLine().trim();;
+        String answer = scanner.nextLine().trim();
         if (answer.equalsIgnoreCase("Y")){
             while(list.stream().filter((book)->book.getTitle().equals(title)).findFirst().isPresent()){
                 list.stream()
                         .filter((book)->book.getTitle()
                         .equals(title)).findFirst()
                         .ifPresent(book -> this.list.remove(book));
-            } // while
+            }
             getAllBook();
         }else if (answer.equalsIgnoreCase("N")){
             System.out.println("canceled deletion process");
