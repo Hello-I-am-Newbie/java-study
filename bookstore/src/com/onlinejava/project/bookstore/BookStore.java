@@ -1,14 +1,18 @@
 package com.onlinejava.project.bookstore;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class BookStore {
 
     private List<Book> list = new ArrayList<>();
+
+    private static boolean test(Book i) {
+        return false;
+    }
+
     public void printWelcomePage() {
         System.out.println("===============================================================");
         System.out.println("                                                               ");
@@ -90,22 +94,17 @@ public class BookStore {
     }
 
     public List<Book> searchBook(int category,String keyword){
-        switch (category){
-            case 1:
-                return list.stream().filter((book)->book.getTitle().contains(keyword)).collect(Collectors.toUnmodifiableList());
-            case 2:
-                return list.stream().filter((book)->book.getWriter().contains(keyword)).collect(Collectors.toUnmodifiableList());
-            case 3:
-                return list.stream().filter((book)->book.getPublisher().contains(keyword)).collect(Collectors.toUnmodifiableList());
-            case 4:
-                return list.stream().filter((book)->book.getPrice().equals(Integer.parseInt(keyword))).collect(Collectors.toUnmodifiableList());
-            case 5:
-                return list.stream().filter((book)->book.getReleaseDate().contains(keyword)).collect(Collectors.toUnmodifiableList());
-            case 6:
-                return list.stream().filter((book)->book.getLocation().contains(keyword)).collect(Collectors.toUnmodifiableList());
-            default:
-                return Collections.emptyList();
-        }
+        Map<Integer, Function<Book, String>> map = Map.of(
+                1, book -> book.getTitle()
+                , 2, book -> book.getWriter()
+                , 3, book -> book.getPublisher()
+                , 4, book -> book.getPrice().toString()
+                , 5, book -> book.getReleaseDate()
+                , 6, book -> book.getLocation()
+        );
+
+        Predicate<Book> predicate = book -> map.getOrDefault(category, x -> "").apply(book).contains(keyword);
+        return list.stream().filter(predicate).collect(Collectors.toUnmodifiableList());
     }
 
     private void removeBook(String title, Scanner scanner){
