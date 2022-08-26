@@ -32,7 +32,7 @@ public class BookStore {
         String command = scanner.nextLine().trim();
         switch (command) {
             case "1":
-                getAllBook();
+                printAllBook();
                 break;
             case "2":
                 addBook();
@@ -46,7 +46,7 @@ public class BookStore {
                 String keyword = scanner.nextLine().trim();
 
                 List<Book> tempList = searchBook(selectCategory(categoryNum) , keyword);
-                getAllBook(tempList);
+                printAllBook(tempList);
                 break;
             case "4":
                 System.out.println("Type TITLE :");
@@ -63,14 +63,14 @@ public class BookStore {
     }
 
 
-    public void getAllBook(){
+    public void printAllBook(){
         System.out.printf("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |%n", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION");
         this.list.forEach(System.out::println);
     }
 
-    public void getAllBook(List<Book> tempList){
+    public void printAllBook(List<Book> bookList){
         System.out.printf("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |%n", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION");
-        tempList.forEach(System.out::println);
+        bookList.forEach(System.out::println);
     }
 
     public void addBook(){
@@ -117,49 +117,49 @@ public class BookStore {
 
     public List<Book> searchBook(String category,String keyword){
 
-        List<Book> tempList = new ArrayList<>();
+        List<Book> bookList = new ArrayList<>();
 
 
         switch (category){
             case "title":
-                tempList = this.list.stream().filter((book)->book.getTitle().contains(keyword)).collect(Collectors.toUnmodifiableList());
-                return tempList;
+                bookList = this.list.stream().filter((book)->book.getTitle().contains(keyword)).collect(Collectors.toUnmodifiableList());
+                return bookList;
             case "writer":
-                tempList =this.list.stream().filter((book)->book.getWriter().contains(keyword)).collect(Collectors.toUnmodifiableList());
-                return tempList;
+                bookList =this.list.stream().filter((book)->book.getWriter().contains(keyword)).collect(Collectors.toUnmodifiableList());
+                return bookList;
             case "publisher":
-                tempList = this.list.stream().filter((book)->book.getPublisher().contains(keyword)).collect(Collectors.toUnmodifiableList());
-            return tempList;
+                bookList = this.list.stream().filter((book)->book.getPublisher().contains(keyword)).collect(Collectors.toUnmodifiableList());
+            return bookList;
             case "price":
-                tempList = this.list.stream().filter((book)->book.getPrice().equals(Integer.parseInt(keyword))).collect(Collectors.toUnmodifiableList());
-            return tempList;
+                bookList = this.list.stream().filter((book)->book.getPrice().equals(Integer.parseInt(keyword))).collect(Collectors.toUnmodifiableList());
+            return bookList;
             case "releaseDate":
-                tempList = this.list.stream().filter((book)->book.getReleaseDate().contains(keyword)).collect(Collectors.toUnmodifiableList());
-            return tempList;
+                bookList = this.list.stream().filter((book)->book.getReleaseDate().contains(keyword)).collect(Collectors.toUnmodifiableList());
+            return bookList;
             case "location":
-                tempList = this.list.stream().filter((book)->book.getLocation().contains(keyword)).collect(Collectors.toUnmodifiableList());
-                return tempList;
+                bookList = this.list.stream().filter((book)->book.getLocation().contains(keyword)).collect(Collectors.toUnmodifiableList());
+                return bookList;
         }
 
-        return tempList;
+        return bookList;
     }
 
-    private void removeBook(String title,Scanner scanner){
-        List<Book> tempList = list.stream()
+    private void removeBook(String title, Scanner scanner){
+        List<Book> bookLit = list.stream()
                         .filter((book)->book.getTitle()
                         .equals(title))
                         .collect(Collectors.toUnmodifiableList());
 
         System.out.println("List of deleted Books");
         System.out.printf("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |\n", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION");
-        tempList.forEach(System.out::println);
+        bookLit.forEach(System.out::println);
 
         System.out.println("Do you really want to delete?   Y\\N");
 
         String answer = scanner.nextLine().trim();
         if (answer.equalsIgnoreCase("Y")){
             list.removeIf(book -> book.getTitle().equals(title));
-            getAllBook();
+            printAllBook();
         }else if (answer.equalsIgnoreCase("N")){
             System.out.println("canceled deletion process");
         }else {
