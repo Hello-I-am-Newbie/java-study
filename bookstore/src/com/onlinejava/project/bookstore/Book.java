@@ -1,6 +1,7 @@
 package com.onlinejava.project.bookstore;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public class Book {
     private String title;
@@ -71,5 +72,63 @@ public class Book {
         return String.format("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |", title, writer, publisher, price, releaseDate, location);
     }
 
+    public enum Properties {
+        TITTLE(1) {
+            @Override
+            public Predicate<Book> same(String keyword) {
+                return book -> book.getTitle().equals(keyword);
+            }
+        },
+        WRITER(2) {
+            @Override
+            public Predicate<Book> same(String keyword) {
+                return book -> book.getWriter().equals(keyword);
+            }
+        },
+        PUBLISHER(3) {
+            @Override
+            public Predicate<Book> same(String keyword) {
+                return book -> book.getPublisher().equals(keyword);
+            }
+        },
+        PRICE(4) {
+            @Override
+            public Predicate<Book> same(String keyword) {
+                return book -> book.getPrice().toString().equals(keyword);
+            }
+        },
+        RELEASEDATE(5) {
+            @Override
+            public Predicate<Book> same(String keyword) {
+                return book -> book.getReleaseDate().equals(keyword);
+            }
+        },
+        LOCATION(6) {
+            @Override
+            public Predicate<Book> same(String keyword) {
+                return book -> book.getLocation().equals(keyword);
+            }
+        };
+
+        private final int categoryNumber;
+
+        Properties(int categoryNumber) {
+            this.categoryNumber = categoryNumber;
+        }
+
+        public abstract Predicate<Book> same(String keyword);
+
+        public String toCategoryString() {
+            return this.categoryNumber + ":" + this.toString();
+        }
+
+        public static List<Properties> valuesToList() {
+            return List.of(values());
+        }
+
+        public int getCategoryNumber() {
+            return this.categoryNumber;
+        }
+    }
 
 }

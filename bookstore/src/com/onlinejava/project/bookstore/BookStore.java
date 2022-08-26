@@ -1,9 +1,10 @@
 package com.onlinejava.project.bookstore;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import static com.onlinejava.project.bookstore.Book.Properties.*;
 
 public class BookStore {
 
@@ -44,7 +45,10 @@ public class BookStore {
                 break;
             case "3":
                 System.out.println("Please select category number to search");
-                System.out.println("1:title\n2.writer\n3.publisher\n4.price\n5.releaseDate\n6.location");
+
+                List.of(TITTLE, WRITER, PUBLISHER, PRICE, RELEASEDATE, LOCATION).stream()
+                        .map(Book.Properties::toCategoryString)
+                        .forEach(System.out::println);
                 int categoryNum = Integer.parseInt(scanner.nextLine().trim());
 
                 System.out.println("keyword :");
@@ -94,17 +98,15 @@ public class BookStore {
     }
 
     public List<Book> searchBook(int category,String keyword){
-        Map<Integer, Function<Book, String>> map = Map.of(
-                1, book -> book.getTitle()
-                , 2, book -> book.getWriter()
-                , 3, book -> book.getPublisher()
-                , 4, book -> book.getPrice().toString()
-                , 5, book -> book.getReleaseDate()
-                , 6, book -> book.getLocation()
-        );
+        Predicate<Book> bookPredicate = valuesToList().stream()
+                .filter(p -> p.getCategoryNumber() == category)
+                .map(p -> p.same(keyword))
+                .findFirst()
+                .orElseGet(() -> book -> false);
 
-        Predicate<Book> predicate = book -> map.getOrDefault(category, x -> "").apply(book).contains(keyword);
-        return list.stream().filter(predicate).collect(Collectors.toUnmodifiableList());
+        return list.stream()
+                .filter(bookPredicate)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     private void removeBook(String title, Scanner scanner){
