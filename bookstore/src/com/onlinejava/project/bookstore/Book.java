@@ -17,7 +17,7 @@ public class Book {
         this.price = price;
         this.releaseDate = releaseDate;
         this.location = location;
-    } // constructor
+    }
 
     public String getTitle() {
         return title;
@@ -72,4 +72,4 @@ public class Book {
     }
 
 
-} // end class
+}

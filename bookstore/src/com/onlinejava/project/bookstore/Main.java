@@ -12,8 +12,8 @@ public class Main {
         while(true){
             bookStore.printWelcomePage();
             bookStore.runCommand(scanner);
-        } // while
+        }
 
-    }  // main
+    }
 
-} // end class
+}
