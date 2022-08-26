@@ -158,12 +158,13 @@ public class BookStore {
 
         String answer = scanner.nextLine().trim();
         if (answer.equalsIgnoreCase("Y")){
-            while(list.stream().filter((book)->book.getTitle().equals(title)).findFirst().isPresent()){
+            while (list.stream().filter((book) -> book.getTitle().equals(title)).findFirst().isPresent()) {
                 list.stream()
-                        .filter((book)->book.getTitle()
-                        .equals(title)).findFirst()
+                        .filter((book) -> book.getTitle()
+                                .equals(title)).findFirst()
                         .ifPresent(book -> this.list.remove(book));
             }
+
             getAllBook();
         }else if (answer.equalsIgnoreCase("N")){
             System.out.println("canceled deletion process");
