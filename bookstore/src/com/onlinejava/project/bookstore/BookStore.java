@@ -46,7 +46,7 @@ public class BookStore {
                 System.out.println("keyword :");
                 String keyword = scanner.nextLine().trim();
 
-                List<Book> tempList = searchBook(selectCategory(categoryNum) , keyword);
+                List<Book> tempList = searchBook(categoryNum, keyword);
                 printAllBook(tempList);
                 break;
             case "4":
@@ -89,40 +89,19 @@ public class BookStore {
 
     }
 
-    public String selectCategory(int categoryNum){
-        switch (categoryNum){
-            case 1:
-                return "title";
-            case 2:
-                return "writer";
-            case 3:
-                return "publisher";
-            case 4:
-                return "price";
-            case 5:
-                return "releaseDate";
-            case 6:
-                return "location";
-            default:
-                return "Error : " + categoryNum;
-
-        }
-
-    }
-
-    public List<Book> searchBook(String category,String keyword){
+    public List<Book> searchBook(int category,String keyword){
         switch (category){
-            case "title":
+            case 1:
                 return this.list.stream().filter((book)->book.getTitle().contains(keyword)).collect(Collectors.toUnmodifiableList());
-            case "writer":
+            case 2:
                 return this.list.stream().filter((book)->book.getWriter().contains(keyword)).collect(Collectors.toUnmodifiableList());
-            case "publisher":
+            case 3:
                 return this.list.stream().filter((book)->book.getPublisher().contains(keyword)).collect(Collectors.toUnmodifiableList());
-            case "price":
+            case 4:
                 return this.list.stream().filter((book)->book.getPrice().equals(Integer.parseInt(keyword))).collect(Collectors.toUnmodifiableList());
-            case "releaseDate":
+            case 5:
                 return this.list.stream().filter((book)->book.getReleaseDate().contains(keyword)).collect(Collectors.toUnmodifiableList());
-            case "location":
+            case 6:
                 return this.list.stream().filter((book)->book.getLocation().contains(keyword)).collect(Collectors.toUnmodifiableList());
             default:
                 return Collections.emptyList();
