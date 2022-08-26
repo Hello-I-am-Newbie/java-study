@@ -146,9 +146,9 @@ public class BookStore {
 
     private void removeBook(String title, Scanner scanner){
         List<Book> bookLit = list.stream()
-                        .filter((book)->book.getTitle()
+                .filter((book) -> book.getTitle()
                         .equals(title))
-                        .collect(Collectors.toUnmodifiableList());
+                .collect(Collectors.toUnmodifiableList());
 
         System.out.println("List of deleted Books");
         System.out.printf("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |\n", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION");
