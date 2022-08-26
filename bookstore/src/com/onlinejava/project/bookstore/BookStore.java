@@ -64,18 +64,13 @@ public class BookStore {
 
 
     public void getAllBook(){
-        System.out.println(
-                String.format("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION")
-        );
+        System.out.printf("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |%n", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION");
         this.list.forEach(i -> System.out.println(i));
     }
 
     public void getAllBook(List<Book> tempList){
-        System.out.println(
-                String.format("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION")
-        );
+        System.out.printf("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |%n", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION");
         tempList.forEach(i -> System.out.println(i));
-//        tempList.clear();
     }
 
     public void addBook(){
@@ -114,7 +109,7 @@ public class BookStore {
             case 6:
                 return "location";
             default:
-                return String.format("Error : " + categoryNum);
+                return "Error : " + categoryNum;
 
         }
 
