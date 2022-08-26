@@ -33,7 +33,7 @@ public class BookStore {
         String command = scanner.nextLine().trim();
         switch (command) {
             case "1":
-                printAllBook(this.list);
+                printAllBook(list);
                 break;
             case "2":
                 addBook();
@@ -85,24 +85,24 @@ public class BookStore {
 
 
         Book book = new Book(title, writer, publisher, price, releaseDate, location);
-        this.list.add(book);
+        list.add(book);
 
     }
 
     public List<Book> searchBook(int category,String keyword){
         switch (category){
             case 1:
-                return this.list.stream().filter((book)->book.getTitle().contains(keyword)).collect(Collectors.toUnmodifiableList());
+                return list.stream().filter((book)->book.getTitle().contains(keyword)).collect(Collectors.toUnmodifiableList());
             case 2:
-                return this.list.stream().filter((book)->book.getWriter().contains(keyword)).collect(Collectors.toUnmodifiableList());
+                return list.stream().filter((book)->book.getWriter().contains(keyword)).collect(Collectors.toUnmodifiableList());
             case 3:
-                return this.list.stream().filter((book)->book.getPublisher().contains(keyword)).collect(Collectors.toUnmodifiableList());
+                return list.stream().filter((book)->book.getPublisher().contains(keyword)).collect(Collectors.toUnmodifiableList());
             case 4:
-                return this.list.stream().filter((book)->book.getPrice().equals(Integer.parseInt(keyword))).collect(Collectors.toUnmodifiableList());
+                return list.stream().filter((book)->book.getPrice().equals(Integer.parseInt(keyword))).collect(Collectors.toUnmodifiableList());
             case 5:
-                return this.list.stream().filter((book)->book.getReleaseDate().contains(keyword)).collect(Collectors.toUnmodifiableList());
+                return list.stream().filter((book)->book.getReleaseDate().contains(keyword)).collect(Collectors.toUnmodifiableList());
             case 6:
-                return this.list.stream().filter((book)->book.getLocation().contains(keyword)).collect(Collectors.toUnmodifiableList());
+                return list.stream().filter((book)->book.getLocation().contains(keyword)).collect(Collectors.toUnmodifiableList());
             default:
                 return Collections.emptyList();
         }
@@ -122,7 +122,7 @@ public class BookStore {
         String answer = scanner.nextLine().trim();
         if (answer.equalsIgnoreCase("Y")){
             list.removeIf(book -> book.getTitle().equals(title));
-            printAllBook();
+            printAllBook(list);
         }else if (answer.equalsIgnoreCase("N")){
             System.out.println("canceled deletion process");
         }else {
