@@ -97,7 +97,7 @@ public class BookStore {
     public List<Book> searchBook(int category,String keyword){
         Predicate<Book> bookPredicate = valuesToList().stream()
                 .filter(p -> p.getCategoryNumber() == category)
-                .map(p -> p.same(keyword))
+                .map(p -> p.getPredicteForEquals(keyword))
                 .findFirst()
                 .orElseGet(() -> book -> false);
 

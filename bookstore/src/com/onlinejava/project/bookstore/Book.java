@@ -75,37 +75,37 @@ public class Book {
     public enum Properties {
         TITTLE(1) {
             @Override
-            public Predicate<Book> same(String keyword) {
+            public Predicate<Book> getPredicteForEquals(String keyword) {
                 return book -> book.getTitle().equals(keyword);
             }
         },
         WRITER(2) {
             @Override
-            public Predicate<Book> same(String keyword) {
+            public Predicate<Book> getPredicteForEquals(String keyword) {
                 return book -> book.getWriter().equals(keyword);
             }
         },
         PUBLISHER(3) {
             @Override
-            public Predicate<Book> same(String keyword) {
+            public Predicate<Book> getPredicteForEquals(String keyword) {
                 return book -> book.getPublisher().equals(keyword);
             }
         },
         PRICE(4) {
             @Override
-            public Predicate<Book> same(String keyword) {
+            public Predicate<Book> getPredicteForEquals(String keyword) {
                 return book -> book.getPrice().toString().equals(keyword);
             }
         },
         RELEASEDATE(5) {
             @Override
-            public Predicate<Book> same(String keyword) {
+            public Predicate<Book> getPredicteForEquals(String keyword) {
                 return book -> book.getReleaseDate().equals(keyword);
             }
         },
         LOCATION(6) {
             @Override
-            public Predicate<Book> same(String keyword) {
+            public Predicate<Book> getPredicteForEquals(String keyword) {
                 return book -> book.getLocation().equals(keyword);
             }
         };
@@ -116,7 +116,7 @@ public class Book {
             this.categoryNumber = categoryNumber;
         }
 
-        public abstract Predicate<Book> same(String keyword);
+        public abstract Predicate<Book> getPredicteForEquals(String keyword);
 
         public String toCategoryString() {
             return this.categoryNumber + ":" + this.toString();
