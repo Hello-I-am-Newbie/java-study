@@ -33,7 +33,7 @@ public class BookStore {
         String command = scanner.nextLine().trim();
         switch (command) {
             case "1":
-                printAllBook();
+                printAllBook(this.list);
                 break;
             case "2":
                 addBook();
@@ -61,12 +61,6 @@ public class BookStore {
                 System.out.println("Error : " + command);
         }
 
-    }
-
-
-    public void printAllBook(){
-        System.out.printf("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |%n", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION");
-        this.list.forEach(System.out::println);
     }
 
     public void printAllBook(List<Book> bookList){
