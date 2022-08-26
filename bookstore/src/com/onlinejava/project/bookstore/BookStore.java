@@ -65,12 +65,12 @@ public class BookStore {
 
     public void getAllBook(){
         System.out.printf("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |%n", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION");
-        this.list.forEach(i -> System.out.println(i));
+        this.list.forEach(System.out::println);
     }
 
     public void getAllBook(List<Book> tempList){
         System.out.printf("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |%n", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION");
-        tempList.forEach(i -> System.out.println(i));
+        tempList.forEach(System.out::println);
     }
 
     public void addBook(){
@@ -152,7 +152,7 @@ public class BookStore {
 
         System.out.println("List of deleted Books");
         System.out.printf("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |\n", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION");
-        tempList.forEach(i-> System.out.println(i));
+        tempList.forEach(System.out::println);
 
         System.out.println("Do you really want to delete?   Y\\N");
 
