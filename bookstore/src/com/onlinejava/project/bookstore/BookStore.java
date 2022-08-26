@@ -64,7 +64,7 @@ public class BookStore {
 
 
     // 모든 책 조회
-    public void getAllBook(){
+    private void getAllBook(){
         System.out.println(
                 String.format("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION")
         );
@@ -72,7 +72,7 @@ public class BookStore {
     }
 
     // 검색된 모든 책 조회
-    public void getAllBook(List<Book> tempList){
+    private void getAllBook(List<Book> tempList){
         System.out.println(
                 String.format("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION")
         );
@@ -81,7 +81,7 @@ public class BookStore {
     }
 
     // 책 추가
-    public void addBook(){
+    private void addBook(){
         Scanner scanner = new Scanner(System.in);
         System.out.println("title > ");
         String title = scanner.nextLine().trim();
@@ -102,7 +102,7 @@ public class BookStore {
 
     } // addList
 
-    public String selectCategory(int categoryNum){
+    private String selectCategory(int categoryNum){
         switch (categoryNum){
             case 1:
                 return "title";
@@ -117,12 +117,12 @@ public class BookStore {
             case 6:
                 return "location";
             default:
-                return String.format("Error : " + categoryNum);
+                return String.format("selectCategory error : " + categoryNum);
 
         } // switch
 
     } // selectCategory
-    public List<Book> searchBook(String category,String keyword){
+    private List<Book> searchBook(String category,String keyword){
 
         List<Book> tempList = new ArrayList<>();
 
@@ -136,20 +136,21 @@ public class BookStore {
                 return tempList;
             case "publisher":
                 tempList = this.list.stream().filter((book)->book.getPublisher().contains(keyword)).collect(Collectors.toUnmodifiableList());
-            return tempList;
+                return tempList;
             case "price":
                 tempList = this.list.stream().filter((book)->book.getPrice().equals(Integer.parseInt(keyword))).collect(Collectors.toUnmodifiableList());
-            return tempList;
+                return tempList;
             case "releaseDate":
                 tempList = this.list.stream().filter((book)->book.getReleaseDate().contains(keyword)).collect(Collectors.toUnmodifiableList());
-            return tempList;
+                return tempList;
             case "location":
                 tempList = this.list.stream().filter((book)->book.getLocation().contains(keyword)).collect(Collectors.toUnmodifiableList());
                 return tempList;
+            default:
+                System.out.println(category);
+                return tempList;
         } // switch
 
-        String.format("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION");
-        return tempList;
     } // searchBook
 
     private void removeBook(String title,Scanner scanner){
@@ -177,7 +178,7 @@ public class BookStore {
         }else if (answer.equalsIgnoreCase("N")){
             System.out.println("canceled deletion process");
         }else {
-            System.out.println("Error : " + answer);
+            System.out.println("remove Book Error : " + answer);
             System.out.println("canceled deletion process");
         } // if
 
