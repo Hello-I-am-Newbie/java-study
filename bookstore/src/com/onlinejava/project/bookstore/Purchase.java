@@ -31,4 +31,8 @@ public class Purchase {
                 ", numberOfPurchase=" + numberOfPurchase +
                 '}';
     }
+
+    public String toCsvString() {
+        return String.join(",", title, customer, String.valueOf(numberOfPurchase));
+    }
 }
