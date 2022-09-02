@@ -82,43 +82,43 @@ public class Book {
         TITTLE(1) {
             @Override
             public Predicate<Book> same(String keyword) {
-                return book -> book.getTitle().equals(keyword);
+                return book -> book.getTitle().contains(keyword);
             }
         },
         WRITER(2) {
             @Override
             public Predicate<Book> same(String keyword) {
-                return book -> book.getWriter().equals(keyword);
+                return book -> book.getWriter().contains(keyword);
             }
         },
         PUBLISHER(3) {
             @Override
             public Predicate<Book> same(String keyword) {
-                return book -> book.getPublisher().equals(keyword);
+                return book -> book.getPublisher().contains(keyword);
             }
         },
         PRICE(4) {
             @Override
             public Predicate<Book> same(String keyword) {
-                return book -> book.getPrice().toString().equals(keyword);
+                return book -> book.getPrice().toString().contains(keyword);
             }
         },
         RELEASEDATE(5) {
             @Override
             public Predicate<Book> same(String keyword) {
-                return book -> book.getReleaseDate().equals(keyword);
+                return book -> book.getReleaseDate().contains(keyword);
             }
         },
         LOCATION(6) {
             @Override
             public Predicate<Book> same(String keyword) {
-                return book -> book.getLocation().equals(keyword);
+                return book -> book.getLocation().contains(keyword);
             }
         },
         STOCK(7) {
             @Override
             public Predicate<Book> same(String keyword) {
-                return book -> book.getStock().toString().equals(keyword);
+                return book -> book.getStock().toString().contains(keyword);
             }
         };
 
@@ -141,6 +141,10 @@ public class Book {
         public int getCategoryNumber(){
             return this.categoryNumber;
         }
+    }
+
+    public String toCsvString() {
+        return String.join(", ", title, writer, publisher, String.valueOf(price), releaseDate, location, String.valueOf(stock));
     }
 
 } // end class
