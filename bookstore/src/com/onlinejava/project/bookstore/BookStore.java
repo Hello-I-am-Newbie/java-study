@@ -292,7 +292,7 @@ public class BookStore {
     }
 
 
-    private void saveAsFile() {
+    public void saveAsFile() {
         try {
             File tmpFile = new File("memberlist.csv.tmp");
             tmpFile.createNewFile();

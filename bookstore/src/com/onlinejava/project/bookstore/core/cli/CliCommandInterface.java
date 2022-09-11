@@ -26,8 +26,10 @@ public interface CliCommandInterface {
             return c1.order() - c2.order();
         }
 
-        boolean isC1Number = Pattern.compile("\\d+").matcher(c1.getCommandID()).matches();
-        boolean isC2Number = Pattern.compile("\\d+").matcher(c2.getCommandID()).matches();
+        boolean isC1Number = c1.getCommandID().matches("\\d+");
+        boolean isC2Number = c2.getCommandID().matches("\\d+");
+//        boolean isC1Number = Pattern.compile("\\d+").matcher(c1.getCommandID()).matches();
+//        boolean isC2Number = Pattern.compile("\\d+").matcher(c2.getCommandID()).matches();
         if (isC1Number && isC2Number) {
             return Integer.parseInt(c1.getCommandID()) - Integer.parseInt(c2.getCommandID());
         } else if (isC1Number) {
