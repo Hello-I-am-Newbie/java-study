@@ -145,6 +145,11 @@ public class BookStore {
             }
 
             @Override
+            public int order() {
+                return methodCommand.order();
+            }
+
+            @Override
             public void run() {
                 try {
                     method.invoke(finalInstance);
