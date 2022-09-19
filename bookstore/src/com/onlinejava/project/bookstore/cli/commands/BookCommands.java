@@ -1,25 +1,26 @@
 package com.onlinejava.project.bookstore.cli.commands;
 
-import com.onlinejava.project.bookstore.Book;
+import com.onlinejava.project.bookstore.Main;
+import com.onlinejava.project.bookstore.domain.model.Book;
 import com.onlinejava.project.bookstore.core.cli.CliCommand;
 
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.onlinejava.project.bookstore.Book.Properties.*;
-import static com.onlinejava.project.bookstore.core.cli.CliCommandInterface.bookstore;
-import static com.onlinejava.project.bookstore.core.cli.CliCommandInterface.scanner;
+import static com.onlinejava.project.bookstore.Main.*;
+import static com.onlinejava.project.bookstore.Main.scanner;
+import static com.onlinejava.project.bookstore.domain.model.Book.Properties.*;
 
 @CliCommand
 public class BookCommands {
     @CliCommand(ID = "1", title = "Print book list")
     public void printAllBook() {
-        bookstore.printAllBook(bookstore.getBookList());
+        bookStoreService.printAllBook(bookStoreService.getBookList());
     }
 
     @CliCommand(ID = "2", title = "Add a new book")
     public void addBook() {
-        bookstore.addBook();
+        bookStoreService.addBook();
     }
 
     @CliCommand(ID = "3", title = "Search a book")
@@ -33,15 +34,15 @@ public class BookCommands {
         System.out.println("keyword :");
         String keyword = scanner.nextLine().trim();
 
-        List<Book> list = bookstore.searchBook(categoryNum , keyword);
-        bookstore.printAllBook(list);
+        List<Book> list = bookStoreService.searchBook(categoryNum , keyword);
+        bookStoreService.printAllBook(list);
     }
 
     @CliCommand(ID = "4", title = "Delete a book")
     public void removeBook() {
         System.out.println("Type TITLE :");
         String title = scanner.nextLine().trim();
-        bookstore.removeBook(title, scanner);
+        bookStoreService.removeBook(title, scanner);
     }
 
     @CliCommand(ID = "5", title = "Buy a book")
@@ -50,7 +51,9 @@ public class BookCommands {
         String titleToBuy = scanner.nextLine().trim();
         System.out.println("Type customer :");
         String customer = scanner.nextLine().trim();
-        bookstore.buyBook(titleToBuy, customer);
+        System.out.println("Type email :");
+        String email = scanner.nextLine().trim();
+        bookStoreService.buyBook(titleToBuy, customer, email);
     }
 
     @CliCommand(ID = "7", title = "Add book stock")
@@ -59,6 +62,6 @@ public class BookCommands {
         String titleToAddStock = scanner.nextLine().trim();
         System.out.println("Type stock : ");
         int stock = Integer.parseInt(scanner.nextLine().trim());
-        bookstore.addStock(titleToAddStock, stock);
+        bookStoreService.addStock(titleToAddStock, stock);
     }
 }

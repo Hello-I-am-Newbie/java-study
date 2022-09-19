@@ -1,9 +1,10 @@
-package com.onlinejava.project.bookstore;
+package com.onlinejava.project.bookstore.domain.model;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
-public class Book {
+public class Book extends Model{
     private String title;
     private String writer;
     private String publisher;
@@ -11,6 +12,9 @@ public class Book {
     private String releaseDate;
     private String location;
     private int stock;
+
+    public Book() {
+    }
 
     public Book(String title, String writer, String publisher, int price, String releaseDate, String location, int stock) {
         this.title = title;
@@ -143,8 +147,17 @@ public class Book {
         }
     }
 
-    public String toCsvString() {
-        return String.join(", ", title, writer, publisher, String.valueOf(price), releaseDate, location, String.valueOf(stock));
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return price == book.price && stock == book.stock && Objects.equals(title, book.title) && Objects.equals(writer, book.writer) && Objects.equals(publisher, book.publisher) && Objects.equals(releaseDate, book.releaseDate) && Objects.equals(location, book.location);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, writer, publisher, price, releaseDate, location, stock);
+    }
 } // end class
