@@ -1,12 +1,15 @@
-package com.onlinejava.project.bookstore;
+package com.onlinejava.project.bookstore.domain.service;
 
-import com.onlinejava.project.bookstore.Book.Properties;
+import com.onlinejava.project.bookstore.Main;
+import com.onlinejava.project.bookstore.core.reflect.ModelSetter;
+import com.onlinejava.project.bookstore.domain.model.*;
 import com.onlinejava.project.bookstore.core.cli.CliCommand;
 import com.onlinejava.project.bookstore.core.cli.CliCommandInterface;
 import com.onlinejava.project.bookstore.core.cli.CommandInvocationHandler;
 
 import javax.swing.text.html.Option;
 import java.io.*;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -20,42 +23,59 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.onlinejava.project.bookstore.Book.Properties.*;
-import static com.onlinejava.project.bookstore.Functions.*;
+import static com.onlinejava.project.bookstore.domain.model.Book.Properties.*;
+import static com.onlinejava.project.bookstore.core.function.Functions.unchecked;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.summarizingInt;
 
-public class BookStore {
-
+public class BookStoreService {
+    private static BookStoreService bookStoreService = new BookStoreService();
     private List<Book> bookList;
     private List<Purchase> purchaseList;
     private List<Member> memberList;
     private Map<String, CliCommandInterface> commands;
 
+    public static BookStoreService getInstance() {
+        return BookStoreService.bookStoreService;
+    }
+    public void setBookList(List<Book> bookList) {
+        this.bookList = bookList;
+    }
+
+    public void setPurchaseList(List<Purchase> purchaseList) {
+        this.purchaseList = purchaseList;
+    }
+
+    public void setMemberList(List<Member> memberList) {
+        this.memberList = memberList;
+    }
+
     {
-        bookList = new ArrayList<>();
-        purchaseList = new ArrayList<>();
-        memberList = new ArrayList<>();
+//        bookList = new ArrayList<>();
+//        purchaseList = new ArrayList<>();
+//        memberList = new ArrayList<>();
 
-        try {
-            this.bookList = Files.lines(Path.of("booklist.csv"))
-                    .map(line -> {
-                        List<String> book = Arrays.stream(line.split(",")).map(String::trim).collect(Collectors.toList());
-                        return new Book(book.get(0), book.get(1), book.get(2), Integer.parseInt(book.get(3)), book.get(4), book.get(5), Integer.parseInt(book.get(6)));
-                    }).collect(Collectors.toList());
-
-            this.purchaseList = Files.lines(Path.of("purchaselist.csv"))
-                    .map(line -> {
-                        List<String> purchase = Arrays.stream(line.split(",")).map(String::trim).collect(Collectors.toList());
-                        return new Purchase(purchase.get(0), purchase.get(1), Integer.parseInt(purchase.get(2)));
-                    }).collect(Collectors.toList());
-
-            this.memberList = Files.lines(Path.of("memberlist.csv"))
-                    .map(line -> {
-                        List<String> member = Arrays.stream(line.split(",")).map(String::trim).collect(Collectors.toList());
-                        return new Member(member.get(0), member.get(1), member.get(2));
-                    }).collect(Collectors.toList());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            this.bookList = Files.lines(Path.of("booklist.csv"))
+//                    .map(line -> {
+//                        List<String> book = Arrays.stream(line.split(",")).map(String::trim).collect(Collectors.toList());
+//                        return new Book(book.get(0), book.get(1), book.get(2), Integer.parseInt(book.get(3)), book.get(4), book.get(5), Integer.parseInt(book.get(6)));
+//                    }).collect(Collectors.toList());
+//
+//            this.purchaseList = Files.lines(Path.of("purchaselist.csv"))
+//                    .map(line -> {
+//                        List<String> purchase = Arrays.stream(line.split(",")).map(String::trim).collect(Collectors.toList());
+//                        return new Purchase(purchase.get(0), purchase.get(1), purchase.get(2), Integer.parseInt(purchase.get(2)));
+//                    }).collect(Collectors.toList());
+//
+//            this.memberList = Files.lines(Path.of("memberlist.csv"))
+//                    .map(line -> {
+//                        List<String> member = Arrays.stream(line.split(",")).map(String::trim).collect(Collectors.toList());
+//                        return new Member(member.get(0), member.get(1), member.get(2));
+//                    }).collect(Collectors.toList());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         String commandPackage = "com.onlinejava.project.bookstore.cli.commands";
 
@@ -78,10 +98,10 @@ public class BookStore {
                     .filter(clazz -> clazz.isAnnotationPresent(CliCommand.class))
                     .flatMap(clazz -> Arrays.stream(clazz.getDeclaredMethods()))
                     .filter(method -> method.isAnnotationPresent(CliCommand.class))
-                    .map(BookStore::methodToCliCommand);
+                    .map(BookStoreService::methodToCliCommand);
 
             commands = Stream.concat(cliCommandInterfaceStream, annotatedCommandStream)
-                    .map(BookStore::commandToProxy)
+                    .map(BookStoreService::commandToProxy)
                     .collect(Collectors.toMap(CliCommandInterface::getCommandID, Function.identity()));
 
 
@@ -101,6 +121,61 @@ public class BookStore {
 //            e.printStackTrace();
 //        }
 
+    }
+
+    public <T extends Model> List<T> getModelListFromLines(String filePath, Class<T> clazz) {
+        List<String> lines = getFileLines(filePath).collect(Collectors.toUnmodifiableList());
+        return getModelListFromLines(lines, clazz, Main.HAS_HEADER);
+    }
+
+    public <T extends Model> List<T> getModelListFromLines(List<String> lines, Class<T> clazz, boolean hasHeader) {
+        return hasHeader
+                ? getModelListFromLinesWithHeader(lines, clazz)
+                : getModelListFromLinesWithoutHeader(lines, clazz);
+    }
+
+    public <T extends Model> List<T> getModelListFromLinesWithHeader(List<String> lines, Class<T> clazz) {
+        if (lines.size() <= 1) {
+            return Collections.emptyList();
+        }
+
+        String[] headers = lines.get(0).split(",");
+        return lines.stream().skip(1)
+                .map(line -> {
+
+                    ModelSetter<T> ObjectSetter = new ModelSetter(clazz);
+                    String[] values = Arrays.stream(line.split(",")).map(String::trim).toArray(String[]::new);
+                    for (int i = 0; i < headers.length; i++) {
+                        ObjectSetter.set(headers[i], values[i]);
+                    }
+
+                    return ObjectSetter.getObject();
+                })
+                .collect(Collectors.toList());
+    }
+
+    public <T extends Model> List<T> getModelListFromLinesWithoutHeader(List<String> lines, Class<T> clazz) {
+        return lines.stream()
+                .map(line -> {
+
+                    ModelSetter<T> ObjectSetter = new ModelSetter(clazz);
+                    Field[] fields = clazz.getDeclaredFields();
+                    String[] values = Arrays.stream(line.split(",")).map(String::trim).toArray(String[]::new);
+                    for (int i = 0; i < fields.length && i < values.length; i++) {
+                        ObjectSetter.set(fields[i].getName(), values[i]);
+                    }
+
+                    return ObjectSetter.getObject();
+                })
+                .collect(Collectors.toList());
+    }
+
+    private Stream<String> getFileLines(String first) {
+        try {
+            return Files.lines(Path.of(first));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static CliCommandInterface commandToProxy(CliCommandInterface cliCommandInstance) {
@@ -188,8 +263,8 @@ public class BookStore {
     public void runCommand(Scanner scanner) {
         String cmdNum = scanner.nextLine().trim();
         Optional.ofNullable(commands.get(cmdNum)).ifPresentOrElse(
-                command -> command.run(),
-                () -> System.out.println("Error: Unkown command : " + cmdNum)
+                CliCommandInterface::run,
+                () -> System.out.println("Error: Unknown command : " + cmdNum)
         );
 //        String command = scanner.nextLine().trim();
 //        switch (command) {
@@ -301,6 +376,10 @@ public class BookStore {
         try {
             File tmpFile = new File("memberlist.csv.tmp");
             tmpFile.createNewFile();
+
+            if (Main.HAS_HEADER) {
+                Files.writeString(Path.of("memberlist.csv.tmp"), Model.toCsvHeader(Member.class) + "\n", StandardOpenOption.APPEND);
+            }
             memberList.forEach(member -> {
                 try {
                     Files.writeString(Path.of("memberlist.csv.tmp"), member.toCsvString() + "\n", StandardOpenOption.APPEND);
@@ -318,6 +397,9 @@ public class BookStore {
         try {
             File bookTmpFile = new File("booklist.csv.tmp");
             bookTmpFile.createNewFile();
+            if (Main.HAS_HEADER) {
+                Files.writeString(Path.of("booklist.csv.tmp"), Model.toCsvHeader(Book.class) + "\n", StandardOpenOption.APPEND);
+            }
             bookList.forEach(book -> {
                 try {
                     Files.writeString(Path.of("booklist.csv.tmp"), book.toCsvString() + "\n", StandardOpenOption.APPEND);
@@ -335,6 +417,7 @@ public class BookStore {
         try {
             File purchaseTmpFile = new File("purchaselist.csv.tmp");
             purchaseTmpFile.createNewFile();
+            Files.writeString(Path.of("purchaselist.csv.tmp"), Model.toCsvHeader(Purchase.class) + "\n" + StandardOpenOption.APPEND);
             purchaseList.forEach(purchase -> {
                 try {
                     Files.writeString(Path.of("purchaselist.csv.tmp"), purchase.toCsvString() + "\n", StandardOpenOption.APPEND);
@@ -368,7 +451,6 @@ public class BookStore {
                     }
                 });
     }
-
     public List<Member> getMemberListToModify(String usernameToModify, String emailToModify) {
         List<Member> memberListToModify = this.memberList.stream().filter(member -> member.getUserName().equals(usernameToModify))
                 .filter(member -> member.getEmail().equals(emailToModify))
@@ -384,6 +466,13 @@ public class BookStore {
 
         return memberListToModify;
     }
+    public Optional<Member> getMemberByNameAndEmail(String username, String email){
+        Optional<Member> member = this.memberList.stream().filter(m -> m.getUserName().equals(username))
+                .filter(m -> m.getEmail().equals(email))
+                .findFirst();
+
+        return member;
+    }
 
     public void withdrawMember(String userToWithdraw) {
         memberList.stream().filter(member -> member.getUserName().equals(userToWithdraw))
@@ -392,7 +481,13 @@ public class BookStore {
 
     public void addMember(String username, String email, String address) {
         memberList.add(
-                new Member(username, email, address)
+                new Member(
+                        username,
+                        email,
+                        address,
+                        0,
+                        Grade.BRONZE
+                        )
         );
     }
 
@@ -406,7 +501,7 @@ public class BookStore {
                 .forEach(book -> book.setStock(book.getStock()+stock));
     }
 
-    public void buyBook(String titleToBuy, String customer) {
+    public void buyBook(String titleToBuy, String customer, String email) {
 
         this.bookList.stream()
                 .filter(book -> book.getTitle().equals(titleToBuy))
@@ -414,9 +509,26 @@ public class BookStore {
                 .forEach(book -> {
                     book.setStock(book.getStock()-1);
                     this.purchaseList.add(
-                        new Purchase(titleToBuy, customer, 1)
+                        new Purchase(
+                                titleToBuy,
+                                customer,
+                                email,
+                                1,
+                                book.getPrice(),
+                                getPoint(book, customer, email)
+                        )
                     );
+                    getMemberByNameAndEmail(customer, email).ifPresent(member -> member.addPoint(getPoint(book, customer, email)));
                 });
+    }
+    private int getPoint(Book book, String customer, String email) {
+        return getMemberByNameAndEmail(customer, email)
+                .map(m -> getPointByMember(book, m))
+                .orElseThrow();
+    }
+
+    private int getPointByMember(Book book, Member member) {
+        return member.getGrade().calculatePoint(book.getPrice());
     }
 
     public void printPurchaseList() {
@@ -427,6 +539,7 @@ public class BookStore {
 
     public void printAllBook(List<Book> bookList){
         System.out.printf("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |%n", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION", "STOCK");
+
         bookList.forEach(i -> System.out.println(i));
 
     }
@@ -500,5 +613,27 @@ public class BookStore {
 
     public List<Book> getBookList(){
         return this.bookList;
+    }
+    public List<Member> getMemberList(){
+        return this.memberList;
+    }
+    public List<Purchase> getPurchaseList(){
+        return this.purchaseList;
+    }
+
+    public void updateMemberGrades() {
+
+        // 이름이 같으면 문제 발생
+        this.purchaseList.stream()
+                .collect(groupingBy(Purchase::getCustomer,Collectors.groupingBy(Purchase::getEmail, summarizingInt(Purchase::getTotalPrice))))
+                .forEach((username, map) -> {
+                    map.forEach((email, stat)->{
+                        Grade newGrade = Grade.getGradeByTotalPrice(stat.getSum());
+                        getMemberByNameAndEmail(username, email).ifPresent(member -> member.setGrade(newGrade));
+                    });
+
+
+                });
+
     }
 }

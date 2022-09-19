@@ -1,4 +1,5 @@
-홍길동,홍길동@naver.com,서울,true
-홍길동1,홍길동1@nate.com,경기,true
-홍길동2,홍길동2@gamil.com,경기,true
-홍길동1,홍길동1@nate.com,경기,true
+userName, email, address, totalPoint, grade, active
+홍길동, 홍길동@naver.com, 서울, 5000, GENERAL, true
+김자바, 김자바@nate.com, 경기, 5000, GENERAL, true
+박자바, 박자바@gamil.com, 경기, 5000, GENERAL, true
+이자바, 이자바@naver.com, 경기, 5000, GENERAL, true
