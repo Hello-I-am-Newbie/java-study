@@ -1,9 +1,5 @@
 package com.onlinejava.project.bookstore.core.cli;
 
-import com.onlinejava.project.bookstore.domain.service.BookStoreService;
-
-import java.util.Scanner;
-
 public interface CliCommandInterface {
 
     String getCommandID();

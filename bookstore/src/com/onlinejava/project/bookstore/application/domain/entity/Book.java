@@ -1,10 +1,10 @@
-package com.onlinejava.project.bookstore.domain.model;
+package com.onlinejava.project.bookstore.application.domain.entity;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-public class Book extends Model{
+public class Book extends Entity {
     private String title;
     private String writer;
     private String publisher;

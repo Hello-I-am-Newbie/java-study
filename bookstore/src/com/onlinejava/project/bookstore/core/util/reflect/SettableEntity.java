@@ -1,8 +1,8 @@
-package com.onlinejava.project.bookstore.core.reflect;
+package com.onlinejava.project.bookstore.core.util.reflect;
 
 import com.onlinejava.project.bookstore.core.util.StringUtils;
-import com.onlinejava.project.bookstore.domain.model.Grade;
-import com.onlinejava.project.bookstore.domain.model.Model;
+import com.onlinejava.project.bookstore.application.domain.entity.Grade;
+import com.onlinejava.project.bookstore.application.domain.entity.Entity;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,15 +10,15 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class ModelSetter<T extends Model> {
+public class SettableEntity<T extends Entity> {
     private final T model;
     private final Map<String, Method> methods;
 
-    public ModelSetter(T model) {
+    public SettableEntity(T model) {
         this.model = model;
         this.methods = ReflectionUtils.getMethodsMap(model.getClass());
     }
-    public ModelSetter(Class<T> clazz) {
+    public SettableEntity(Class<T> clazz) {
         this.model = ReflectionUtils.newInstance(clazz);
         this.methods = ReflectionUtils.getMethodsMap(model.getClass());
     }

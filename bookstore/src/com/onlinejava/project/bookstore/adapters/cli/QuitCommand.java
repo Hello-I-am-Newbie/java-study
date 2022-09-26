@@ -1,4 +1,4 @@
-package com.onlinejava.project.bookstore.cli.commands;
+package com.onlinejava.project.bookstore.adapters.cli;
 
 import com.onlinejava.project.bookstore.core.cli.CliCommandInterface;
 
