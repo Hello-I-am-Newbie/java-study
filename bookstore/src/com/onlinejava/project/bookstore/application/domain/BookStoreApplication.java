@@ -24,6 +24,7 @@ public class BookStoreApplication {
         while (keepRunning) {
             printWelcomePage();
             runCommand();
+
         }
         System.out.println("End");
     }
@@ -34,7 +35,6 @@ public class BookStoreApplication {
     }
 
     public void printWelcomePage() {
-        System.out.println();
         System.out.println();
         System.out.println();
         System.out.println();
