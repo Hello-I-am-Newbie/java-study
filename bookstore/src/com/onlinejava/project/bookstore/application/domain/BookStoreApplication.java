@@ -1,5 +1,6 @@
 package com.onlinejava.project.bookstore.application.domain;
 
+import com.onlinejava.project.bookstore.adapters.file.FileDataInitializer;
 import com.onlinejava.project.bookstore.core.cli.CliCommandInterface;
 import com.onlinejava.project.bookstore.core.cli.CommandCache;
 
@@ -28,8 +29,7 @@ public class BookStoreApplication {
     }
 
     public void initialize() {
-        BookStoreFactory.loadObjectsIntoCache();
-        BookStoreFactory.initializeRepositoryData();
+        FileDataInitializer.initializeRepositoryData();
         CommandCache.loadCommands();
     }
 

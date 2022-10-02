@@ -10,21 +10,24 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static com.onlinejava.project.bookstore.core.util.StringUtils.*;
+import static com.onlinejava.project.bookstore.core.util.reflect.ReflectionUtils.*;
+
 public class SettableEntity<T extends Entity> {
     private final T model;
     private final Map<String, Method> methods;
 
     public SettableEntity(T model) {
         this.model = model;
-        this.methods = ReflectionUtils.getMethodsMap(model.getClass());
+        this.methods = getMethodsMap(model.getClass());
     }
     public SettableEntity(Class<T> clazz) {
-        this.model = ReflectionUtils.newInstance(clazz);
-        this.methods = ReflectionUtils.getMethodsMap(model.getClass());
+        this.model = newInstance(clazz);
+        this.methods = getMethodsMap(model.getClass());
     }
 
     public void set(String fieldName, String value) {
-        String setterName = "set" + StringUtils.toCapitalize(fieldName.trim());
+        String setterName = "set" + toCapitalize(fieldName.trim());
         Method setter = methods.get(setterName);
         if (setter == null) {
             System.out.printf("Setter method of [%s] is not found. [value:%s]\n", fieldName, value);

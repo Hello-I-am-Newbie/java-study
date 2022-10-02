@@ -1,9 +1,9 @@
 package com.onlinejava.project.bookstore.adapters.cli;
 
-import com.onlinejava.project.bookstore.application.domain.BookStoreFactory;
 import com.onlinejava.project.bookstore.application.domain.entity.Member;
 import com.onlinejava.project.bookstore.application.ports.input.MemberUseCase;
 import com.onlinejava.project.bookstore.core.cli.CliCommand;
+import com.onlinejava.project.bookstore.core.factory.BeanFactory;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class MemberCommands {
     private MemberUseCase service;
 
     public MemberCommands() {
-        this.service = BookStoreFactory.lookup(MemberUseCase.class);
+        this.service = BeanFactory.getInstance().get(MemberUseCase.class);
     }
     @CliCommand(ID = "8", title = "Print member list")
     public void printMemberList() {

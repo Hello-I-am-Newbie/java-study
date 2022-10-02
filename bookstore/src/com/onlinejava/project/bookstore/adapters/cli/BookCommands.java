@@ -1,9 +1,9 @@
 package com.onlinejava.project.bookstore.adapters.cli;
 
-import com.onlinejava.project.bookstore.application.domain.BookStoreFactory;
 import com.onlinejava.project.bookstore.application.domain.entity.Book;
 import com.onlinejava.project.bookstore.application.ports.input.BookUseCase;
 import com.onlinejava.project.bookstore.core.cli.CliCommand;
+import com.onlinejava.project.bookstore.core.factory.BeanFactory;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -16,7 +16,7 @@ public class BookCommands {
     private BookUseCase service;
 
     public BookCommands() {
-        this.service = BookStoreFactory.lookup(BookUseCase.class);
+        this.service = BeanFactory.getInstance().get(BookUseCase.class);
     }
 
     @CliCommand(ID = "1", title = "Print book list")

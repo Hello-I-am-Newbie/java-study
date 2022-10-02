@@ -1,33 +1,30 @@
 package com.onlinejava.project.bookstore.application.domain.service;
 
-import com.onlinejava.project.bookstore.application.domain.BookStoreFactory;
-import com.onlinejava.project.bookstore.application.domain.entity.Book;
 import com.onlinejava.project.bookstore.application.domain.entity.Grade;
 import com.onlinejava.project.bookstore.application.domain.entity.Member;
 import com.onlinejava.project.bookstore.application.domain.entity.Purchase;
 import com.onlinejava.project.bookstore.application.ports.input.MemberUseCase;
 import com.onlinejava.project.bookstore.application.ports.output.MemberRepository;
-import com.onlinejava.project.bookstore.application.ports.output.PurchaseRepository;
+import com.onlinejava.project.bookstore.core.factory.Bean;
+import com.onlinejava.project.bookstore.core.factory.Inject;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static com.onlinejava.project.bookstore.application.domain.entity.Book.Properties.valuesToList;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.summarizingInt;
 
+@Bean
 public class MemberService implements MemberUseCase {
+
+    @Inject
     private MemberRepository repository;
+    @Inject
     private PurchaseService purchaseService;
 
     public MemberService() {
 
-    }
-    public void setDependency() {
-        this.repository = BookStoreFactory.lookup(MemberRepository.class);
     }
     public MemberService(MemberRepository repository, PurchaseService purchaseService) {
         this.repository = repository;

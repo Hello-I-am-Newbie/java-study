@@ -2,7 +2,6 @@ package com.onlinejava.project.bookstore.core.cli;
 
 import com.onlinejava.project.bookstore.Main;
 import com.onlinejava.project.bookstore.core.function.Functions;
-import com.onlinejava.project.bookstore.core.util.reflect.ReflectionUtils;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -13,6 +12,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.onlinejava.project.bookstore.core.util.reflect.ReflectionUtils.*;
 
 public class CommandCache {
     private static Map<String, CliCommandInterface> commands = new HashMap<>();
@@ -74,32 +75,7 @@ public class CommandCache {
         return new File(resource.getFile());
     }
 
-    private static List<String> streamPackageNamesFrom(String packageName, File dir) {
-        if (!dir.isDirectory() || dir.listFiles().length <= 0) {
-            return List.of();
-        }
 
-        List<String> subDirs = Arrays.stream(dir.listFiles())
-                .flatMap(f -> streamPackageNamesFrom(packageName + "." + f.getName(), f).stream())
-                .collect(Collectors.toList());
-        subDirs.add(packageName);
-        return subDirs;
-    }
-
-    private static List<Class> getClassesInPackage(String basePackage) {
-        InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream(basePackage.replaceAll("[.]", "/"));
-        InputStreamReader isr = new InputStreamReader(is);
-        BufferedReader reader = new BufferedReader(isr);
-
-        try (is; isr; reader) {
-            return reader.lines()
-                    .filter(line -> line.endsWith(".class"))
-                    .map(Functions.unchecked(line -> Class.forName(basePackage + "." + line.substring(0, line.length() - 6))))
-                    .collect(Collectors.toUnmodifiableList());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private static CliCommandInterface commandToProxy(CliCommandInterface cmd) {
         ClassLoader classLoader = CliCommandInterface.class.getClassLoader();
@@ -111,7 +87,7 @@ public class CommandCache {
     private static CliCommandInterface methodToCliCommand(Method method) {
         CliCommand classCommand = method.getClass().getDeclaredAnnotation(CliCommand.class);
         CliCommand methodCommand = method.getDeclaredAnnotation(CliCommand.class);
-        final Object instance = ReflectionUtils.newInstanceFromMethod(method);
+        final Object instance = newInstanceFromMethod(method);
 
         return new CliCommandInterface() {
             @Override

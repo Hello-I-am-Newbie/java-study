@@ -1,9 +1,10 @@
 package com.onlinejava.project.bookstore.application.domain.service;
 
-import com.onlinejava.project.bookstore.application.domain.BookStoreFactory;
 import com.onlinejava.project.bookstore.application.domain.entity.Book;
 import com.onlinejava.project.bookstore.application.ports.input.BookUseCase;
 import com.onlinejava.project.bookstore.application.ports.output.BookRepository;
+import com.onlinejava.project.bookstore.core.factory.Bean;
+import com.onlinejava.project.bookstore.core.factory.Inject;
 
 import java.util.List;
 import java.util.Scanner;
@@ -12,15 +13,13 @@ import java.util.stream.Collectors;
 
 import static com.onlinejava.project.bookstore.application.domain.entity.Book.Properties.valuesToList;
 
+@Bean
 public class BookService implements BookUseCase {
 
+    @Inject
     private BookRepository repository;
 
     public BookService() {}
-
-    public void setDependency() {
-        this.repository = BookStoreFactory.lookup(BookRepository.class);
-    }
 
     public BookService(BookRepository repository) {
         this.repository = repository;

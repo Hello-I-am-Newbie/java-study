@@ -68,13 +68,11 @@ public class ReflectionUtils {
             throw new RuntimeException(e);
         }
     }
-
     public static <T> void setField(T object, Field field, Object value) {
         accessField(object, field, f -> {
             f.set(object, value);
         });
     }
-
 
     public static <T, F> F getField(T object, Field field) {
         return (F) getField(object, field.getName(), field.getType());

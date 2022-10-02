@@ -1,12 +1,10 @@
 package com.onlinejava.project.bookstore.adapters.cli;
 
-import com.onlinejava.project.bookstore.application.domain.BookStoreFactory;
 import com.onlinejava.project.bookstore.application.ports.output.BookRepository;
 import com.onlinejava.project.bookstore.application.ports.output.MemberRepository;
 import com.onlinejava.project.bookstore.application.ports.output.PurchaseRepository;
 import com.onlinejava.project.bookstore.core.cli.CliCommandInterface;
-
-import static com.onlinejava.project.bookstore.Main.*;
+import com.onlinejava.project.bookstore.core.factory.BeanFactory;
 
 public class SaveCommand implements CliCommandInterface {
     private BookRepository bookRepository;
@@ -14,9 +12,9 @@ public class SaveCommand implements CliCommandInterface {
     private PurchaseRepository purchaseRepository;
 
     public SaveCommand() {
-        this.bookRepository = BookStoreFactory.lookup(BookRepository.class);
-        this.memberRepository = BookStoreFactory.lookup(MemberRepository.class);
-        this.purchaseRepository = BookStoreFactory.lookup(PurchaseRepository.class);
+        this.bookRepository = BeanFactory.getInstance().get(BookRepository.class);
+        this.memberRepository = BeanFactory.getInstance().get(MemberRepository.class);
+        this.purchaseRepository = BeanFactory.getInstance().get(PurchaseRepository.class);
     }
 
     public SaveCommand(BookRepository bookRepository, MemberRepository memberRepository, PurchaseRepository purchaseRepository) {

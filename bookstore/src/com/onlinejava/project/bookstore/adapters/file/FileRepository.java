@@ -2,6 +2,7 @@ package com.onlinejava.project.bookstore.adapters.file;
 
 import com.onlinejava.project.bookstore.Main;
 import com.onlinejava.project.bookstore.application.domain.entity.Entity;
+import com.onlinejava.project.bookstore.core.factory.Bean;
 import com.onlinejava.project.bookstore.core.function.Consumers;
 import com.onlinejava.project.bookstore.core.util.FileUtils;
 import com.onlinejava.project.bookstore.core.util.reflect.SettableEntity;
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Bean
 public abstract class FileRepository<T extends Entity> {
     protected List<T> list;
 
