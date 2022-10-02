@@ -19,7 +19,6 @@ import static java.util.stream.Collectors.summarizingInt;
 public interface BookUseCase {
 
     public abstract void addStock(String titleToAddStock, int stock);
-    public abstract void printAllBook(List<Book> bookList);
 
     public abstract void createBook(Book newBook);
 

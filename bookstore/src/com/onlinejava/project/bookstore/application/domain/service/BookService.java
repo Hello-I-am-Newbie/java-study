@@ -1,6 +1,7 @@
 package com.onlinejava.project.bookstore.application.domain.service;
 
 import com.onlinejava.project.bookstore.application.domain.entity.Book;
+import com.onlinejava.project.bookstore.application.domain.exception.DuplicateItemException;
 import com.onlinejava.project.bookstore.application.ports.input.BookUseCase;
 import com.onlinejava.project.bookstore.application.ports.output.BookRepository;
 import com.onlinejava.project.bookstore.core.factory.Bean;
@@ -12,6 +13,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.onlinejava.project.bookstore.application.domain.entity.Book.Properties.valuesToList;
+import static com.onlinejava.project.bookstore.application.domain.exception.TooManyItemsException.Term.BookTitle;
+import static com.onlinejava.project.bookstore.application.domain.exception.UnexpectedException.throwIfFailed;
 
 @Bean
 public class BookService implements BookUseCase {
@@ -37,16 +40,11 @@ public class BookService implements BookUseCase {
     }
 
     @Override
-    public void printAllBook(List<Book> bookList){
-        System.out.printf("| %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t | %-10s \t |%n", "TITLE", "WRITER", "PUBLISHER", "PRICE", "RELEASEDATE", "LOCATION", "STOCK");
-
-        bookList.forEach(i -> System.out.println(i));
-
-    }
-
-    @Override
-    public void createBook(Book newBook){
-        getBookList().add(newBook);
+    public void createBook(Book book){
+        repository.findByTitle(book.getTitle())
+                .ifPresent(DuplicateItemException.consumerOf(BookTitle, book.getTitle()));
+        boolean result = repository.add(book);
+        throwIfFailed(result, "failed to add new book" );
 
     }
 
@@ -83,9 +81,11 @@ public class BookService implements BookUseCase {
                 getBookList().stream()
                         .filter((book)->book.getTitle()
                                 .equals(title)).findFirst()
-                        .ifPresent(book -> getBookList().remove(book));
+                        .ifPresent((book) -> {
+                            boolean result = repository.remove(book);
+                            throwIfFailed(result, "failed to remove the book titled : " + title);
+                        });
             }
-            printAllBook(getBookList());
         }else if (answer.equalsIgnoreCase("N")){
             System.out.println("canceled deletion process");
         }else {

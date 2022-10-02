@@ -32,4 +32,14 @@ public class FileBookRepository extends FileRepository<Book> implements BookRepo
                 .filter(b -> b.getTitle().equals(title))
                 .findFirst();
     }
+    @Override
+    public boolean remove(Book book) {
+        return this.list.remove(book);
+    }
+
+    @Override
+    public boolean add(Book book) {
+        return this.list.add(book);
+    }
+
 }

@@ -22,8 +22,7 @@ public final class BeanFactory {
     private static Map<Class, Object> beans = new ConcurrentHashMap<>();
     static {
         getInstance().getBeansInBasePackage().stream()
-                .map(getInstance()::findOrCreateInstance)
-                .forEach(getInstance()::injectDependency);
+                .forEach(getInstance()::findOrCreateInstance);
     }
 
     private static BeanFactory beanFactory;

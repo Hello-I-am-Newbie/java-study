@@ -1,5 +1,6 @@
 package com.onlinejava.project.bookstore.adapters.cli;
 
+import com.onlinejava.project.bookstore.application.domain.entity.Purchase;
 import com.onlinejava.project.bookstore.application.ports.input.PurchaseUseCase;
 import com.onlinejava.project.bookstore.core.cli.CliCommand;
 import com.onlinejava.project.bookstore.core.factory.BeanFactory;
@@ -10,29 +11,28 @@ import static com.onlinejava.project.bookstore.application.domain.BookStoreAppli
 public class PurchaseCommands {
     private PurchaseUseCase service;
 
+    private ConsolePrinter<Purchase> printer = new ConsolePrinter<>(Purchase.class);
     public PurchaseCommands() {
         this.service = BeanFactory.getInstance().get(PurchaseUseCase.class);
     }
     @CliCommand(ID = "5", title = "Buy a book")
     public void buyBook() {
-        System.out.println("Type TITLE :");
-        String titleToBuy = scanner.nextLine().trim();
-        System.out.println("Type customer :");
-        String customer = scanner.nextLine().trim();
-        System.out.println("Type email :");
-        String email = scanner.nextLine().trim();
-        service.buyBook(titleToBuy, customer, email);
+        String title = ConsoleUtils.prompt("title");
+        String customer = ConsoleUtils.prompt("customer");
+        String email = ConsoleUtils.prompt("email");
+
+        service.buyBook(title, customer, email);
     }
     @CliCommand(ID = "6", title = "Print purchase list")
     public void printPurchaseList() {
-        service.getPurchaseList().forEach(System.out::println);
+        printer.printList(service.getPurchaseList());
     }
 
     @CliCommand(ID = "12", title = "Print a user's purchases")
     public void printUsersPurchaseList() {
-        System.out.println("Type username : ");
-        String usernameToPrintPurchases = scanner.nextLine().trim();
-        service.printPurchaseListByUser(usernameToPrintPurchases);
+        String username = ConsoleUtils.prompt("username");
+
+        service.printPurchaseListByUser(username);
     }
 
 }

@@ -15,32 +15,27 @@ import static com.onlinejava.project.bookstore.application.domain.entity.Book.Pr
 public class BookCommands {
     private BookUseCase service;
 
+    private ConsolePrinter<Book> printer = new ConsolePrinter<>(Book.class);
+
     public BookCommands() {
         this.service = BeanFactory.getInstance().get(BookUseCase.class);
     }
 
     @CliCommand(ID = "1", title = "Print book list")
     public void printAllBook() {
-        service.printAllBook(service.getBookList());
+        printer.printList(service.getBookList());
     }
 
     @CliCommand(ID = "2", title = "Add a new book")
     public void addBook() {
 
-        System.out.println("title > ");
-        String title = scanner.nextLine().trim();
-        System.out.println("writer > ");
-        String writer = scanner.nextLine().trim();
-        System.out.println("publisher > ");
-        String publisher = scanner.nextLine().trim();
-        System.out.println("price > ");
-        int price = Integer.parseInt(scanner.nextLine().trim());
-        System.out.println("releaseDate > ");
-        String releaseDate = scanner.nextLine().trim();
-        System.out.println("location > ");
-        String location = scanner.nextLine().trim();
-        System.out.println("stock > ");
-        int stock = Integer.parseInt(scanner.nextLine().trim());
+        String title = ConsoleUtils.prompt("title");
+        String writer = ConsoleUtils.prompt("writer");
+        String publisher = ConsoleUtils.prompt("publisher");
+        int price = ConsoleUtils.prompt("price", Integer::parseInt);
+        String releaseDate = ConsoleUtils.prompt("releaseDate");
+        String location = ConsoleUtils.prompt("location");
+        int stock = ConsoleUtils.prompt("stock", Integer::parseInt);
 
         Book book = new Book(title, writer, publisher, price, releaseDate, location, stock);
 
@@ -55,27 +50,26 @@ public class BookCommands {
                 .forEach(System.out::println);
         int categoryNum = Integer.parseInt(scanner.nextLine().trim());
 
-        System.out.println("keyword :");
-        String keyword = scanner.nextLine().trim();
+        String keyword = ConsoleUtils.prompt("keyword");
 
         List<Book> list = service.searchBook(categoryNum , keyword);
-        service.printAllBook(list);
+        printer.printList(list);
     }
 
     @CliCommand(ID = "4", title = "Delete a book")
     public void removeBook() {
-        System.out.println("Type TITLE :");
-        String title = scanner.nextLine().trim();
+        String title = ConsoleUtils.prompt("title");
         service.removeBook(title, scanner);
+        printer.printList(service.getBookList());
     }
 
 
     @CliCommand(ID = "7", title = "Add book stock")
     public void addBookStock() {
-        System.out.println("Type title : ");
-        String titleToAddStock = scanner.nextLine().trim();
-        System.out.println("Type stock : ");
-        int stock = Integer.parseInt(scanner.nextLine().trim());
-        service.addStock(titleToAddStock, stock);
+        String title = ConsoleUtils.prompt("title");
+        int stock = ConsoleUtils.prompt("stock", Integer::parseInt);
+        service.addStock(title, stock);
+
     }
+
 }
